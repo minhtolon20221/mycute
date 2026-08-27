@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Web Đầu Tiên</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f9; }
+        h1 { color: #0066cc; }
+    </style>
+</head>
+<body>
+    <h1>Chào mừng đến với trang web của tôi!</h1>
+    <p>Trang web này được lưu trữ miễn phí trên GitHub Pages.</p>
+</body>
+</html>
