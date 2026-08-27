@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Trang Web Đầu Tiên</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f9; }
-        h1 { color: #0066cc; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giao diện Web Instagram Style</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Chào mừng đến với trang web của tôi!</h1>
-    <p>Trang web này được lưu trữ miễn phí trên GitHub Pages.</p>
+
+  <div class="card">
+    <h2>HTML & CSS</h2>
+    <p>Học lập trình giao diện web mượt mà và hiện đại theo xu hướng mới nhất.</p>
+    <a href="#" class="btn">Khám phá ngay</a>
+  </div>
+
 </body>
 </html>
