@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* ----- GIAO DIỆN WEB NỀN (LANDING PAGE) ----- */
+        /* ----- GIAO DIỆN NỀN LANDING PAGE ----- */
         .website-container {
             position: relative;
             width: 90%;
@@ -122,6 +122,7 @@
             font-size: 0.9rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
+            z-index: 2;
         }
 
         .reopen-btn:hover {
@@ -129,12 +130,12 @@
             background: #1e1e5c;
         }
 
-        /* ----- OVERLAY BỨC THƯ (CĂN GIỮA TOÀN MÀN HÌNH) ----- */
+        /* ----- OVERLAY BỨC THƯ ----- */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 12, 29, 0.65);
-            backdrop-filter: blur(8px);
+            background: rgba(15, 12, 29, 0.6);
+            backdrop-filter: blur(6px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -164,8 +165,7 @@
             background-color: #fce4ec;
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: transform 0.5s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         .envelope::before {
@@ -231,23 +231,59 @@
             transition: opacity 0.3s ease;
         }
 
-        /* TỜ GIẤY THƯ */
+        /* VÙNG SÁNG HÀO QUANG BEHIND LETTER (PHÙ HỢP CẢM GIÁC LÃNG MẠN) */
+        .letter-backdrop-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 520px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.8) 0%, rgba(240, 98, 146, 0.4) 45%, transparent 75%);
+            filter: blur(25px);
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.7s ease;
+            border-radius: 50%;
+        }
+
+        /* GIẤY THƯ VIẾT TAY CỔ ĐỂN */
         .letter {
             position: absolute;
             bottom: 10px;
             left: 15px;
             width: 290px;
             height: 190px;
-            background: #fffdf5;
-            background-image: linear-gradient(#e8e0d0 1px, transparent 1px);
+            background: #fdf8e9;
+            background-image: linear-gradient(#e2d7be 1px, transparent 1px);
             background-size: 100% 28px;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 30px 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             z-index: 2;
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             box-sizing: border-box;
             overflow: hidden;
+            border: 1px solid #ebdcb9;
+        }
+
+        /* Dấu sáp vỡ/trang trí góc thư */
+        .letter-header-seal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 38px;
+            height: 38px;
+            background: radial-gradient(circle, #b71c1c, #7f0000);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffebee;
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            opacity: 0.9;
         }
 
         .letter-content {
@@ -263,14 +299,15 @@
 
         .letter-content h2 {
             font-size: 1.8rem;
-            color: #b71c1c;
-            margin-bottom: 12px;
+            color: #8e0000;
+            margin-bottom: 10px;
+            padding-right: 40px;
         }
 
         .letter-content p {
             font-size: 1.35rem;
             line-height: 1.5;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .letter-content .signature {
@@ -280,23 +317,23 @@
             color: #8e0000;
         }
 
-        /* KHU VỰC NÚT ĐÓNG & THOÁT */
+        /* THANH NÚT ĐIỀU HƯỚNG BÊN DƯỚI THƯ */
         .action-buttons {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
             margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px dashed #ccc;
+            padding-top: 12px;
+            border-top: 1px dashed #d7c49e;
             font-family: 'Montserrat', sans-serif;
         }
 
         .action-btn {
             flex: 1;
-            padding: 8px 12px;
+            padding: 10px;
             border: none;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s, transform 0.2s;
@@ -338,7 +375,7 @@
             50% { transform: translateY(-6px); opacity: 1; }
         }
 
-        /* ----- TRẠNG THÁI MỞ THƯ (CĂN CHÍNH GIỮA) ----- */
+        /* ----- TRẠNG THÁI MỞ (THƯ CĂN GIỮA & NỀN HÀO QUANG) ----- */
         .envelope-wrapper.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -348,17 +385,23 @@
             opacity: 0;
         }
 
-        /* Khi mở, lá thư nhảy ra CHÍNH GIỮA MÀN HÌNH */
+        /* Hiện vùng sáng hồng hào quang phía sau */
+        .envelope-wrapper.open .letter-backdrop-glow {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Lá thư bay thẳng ra chính giữa màn hình */
         .envelope-wrapper.open .letter {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 440px;
-            height: 520px;
+            max-width: 450px;
+            height: 540px;
             z-index: 200;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 0 35px rgba(236, 64, 122, 0.4), 0 20px 50px rgba(0,0,0,0.3);
             cursor: default;
         }
 
@@ -373,7 +416,6 @@
 </head>
 <body>
 
-    <!-- GIAO DIỆN TRANG WEB MAIN -->
     <div class="website-container">
         <button class="reopen-btn" onclick="openOverlay()">Mở lá thư 💌</button>
 
@@ -390,32 +432,34 @@
         </div>
     </div>
 
-    <!-- MÀN HÌNH BỨC THƯ -->
     <div class="overlay" id="paperOverlay">
+        
         <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
             
+            <div class="letter-backdrop-glow"></div>
+
             <div class="envelope">
                 <div class="envelope-flap"></div>
                 <div class="envelope-bottom"></div>
                 <div class="wax-seal">❤️</div>
 
-                <!-- BỨC THƯ -->
                 <div class="letter" onclick="event.stopPropagation()">
+                    <div class="letter-header-seal">❤️</div>
                     <div class="letter-content">
                         <div>
-                            <h2>Gửi [Tên Người Nhận],</h2>
+                            <h2>Gửi [Tên Người Nhận] thân mến,</h2>
                             <p>Chào mừng bạn đến với trang web nhỏ này.</p>
-                            <p>Tụi mình đã tự tay viết bức thư này dành tặng riêng cho bạn.</p>
-                            <p>Thế giới này đôi khi rất vội vã, nên hãy nhớ dành thời gian cho bản thân và những người mình yêu thương nhé!</p>
+                            <p>Tụi mình đã tự tay thiết kế và viết bức thư này để dành tặng riêng cho bạn.</p>
+                            <p>Thế giới này đôi khi rất vội vã, nên hãy nhớ dành thời gian cho bản thân và những người mình yêu thương nhé.</p>
+                            <p>Chúc bạn luôn vui vẻ và hạnh phúc.</p>
                         </div>
 
                         <div>
                             <div class="signature">Thân mến,<br>[Tên Của Bạn]</div>
 
-                            <!-- NÚT THOÁT VÀ ĐÓNG THƯ -->
                             <div class="action-buttons">
-                                <button class="action-btn btn-reset" onclick="resetToUnopened()">Gấp thư lại ✉️</button>
-                                <button class="action-btn btn-home" onclick="closeToHome()">Về trang chủ 🏠</button>
+                                <button class="action-btn btn-reset" onclick="resetToUnopened(event)">Gấp thư lại ✉️</button>
+                                <button class="action-btn btn-home" onclick="closeToHome(event)">Về trang chủ 🏠</button>
                             </div>
                         </div>
                     </div>
@@ -428,7 +472,7 @@
     </div>
 
     <script>
-        // Mở phong bì và đưa bức thư ra giữa màn hình
+        // Mở phong bì và đưa lá thư ra giữa cùng hiệu ứng hào quang
         function openEnvelope() {
             const wrapper = document.getElementById('envelopeWrapper');
             if (!wrapper.classList.contains('open')) {
@@ -436,14 +480,14 @@
             }
         }
 
-        // Gấp thư lại về trạng thái phong bì chưa mở (vẫn ở trên màn hình)
+        // Gấp thư lại về trạng thái phong bì ban đầu (trên cùng màn hình)
         function resetToUnopened(event) {
             if (event) event.stopPropagation();
             const wrapper = document.getElementById('envelopeWrapper');
             wrapper.classList.remove('open');
         }
 
-        // Thoát hoàn toàn về trang chủ (đặt lại phong bì chưa mở cho lần bấm sau)
+        // Đóng màn hình thư quay về trang chủ
         function closeToHome(event) {
             if (event) event.stopPropagation();
             const overlay = document.getElementById('paperOverlay');
@@ -455,12 +499,12 @@
             }, 400);
         }
 
-        // Mở lại màn hình thư từ nút ở Trang chủ
+        // Kích hoạt mở lại màn hình lá thư từ trang chủ
         function openOverlay() {
             const overlay = document.getElementById('paperOverlay');
             const wrapper = document.getElementById('envelopeWrapper');
             
-            wrapper.classList.remove('open'); // Đảm bảo luôn ở trạng thái chưa mở
+            wrapper.classList.remove('open');
             overlay.classList.remove('hidden');
         }
     </script>
