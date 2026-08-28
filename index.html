@@ -1,18 +1,189 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giao diện Web Instagram Style</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website mẫu - Ô nhập nội dung</title>
+<style>
+  * { box-sizing: border-box; }
 
-  <div class="card">
-    <h2>HTML & CSS</h2>
-    <p>Học lập trình giao diện web mượt mà và hiện đại theo xu hướng mới nhất.</p>
-    <a href="#" class="btn">Khám phá ngay</a>
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f8f8f8;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px;
+  }
+
+  .page {
+    width: min(1100px, 100%);
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 20px;
+    padding: 9px 16px;
+    cursor: pointer;
+    background: #8d4bd8;
+    color: white;
+    font-size: 14px;
+    box-shadow: 0 3px 10px rgba(80,40,120,.12);
+  }
+
+  button:hover { filter: brightness(1.05); }
+
+  .hint {
+    color: #777;
+    font-size: 13px;
+    text-align: center;
+    margin: 0 0 12px;
+  }
+
+  .canvas {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 740 / 466;
+    overflow: hidden;
+    background: url("mau.png") center center / 100% 100% no-repeat;
+    border-radius: 8px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.08);
+  }
+
+  /*
+    Vùng trắng trong ảnh mẫu:
+    x ≈ 113/740, y ≈ 154/466
+    width ≈ 242/740, height ≈ 223/466
+  */
+  .editable {
+    position: absolute;
+    left: 15.27%;
+    top: 33.05%;
+    width: 32.70%;
+    height: 47.85%;
+    padding: 20px;
+    overflow: auto;
+
+    background: rgba(255,255,255,.985);
+    border-radius: 17px;
+
+    color: #333;
+    font-size: clamp(14px, 1.8vw, 20px);
+    line-height: 1.55;
+    outline: none;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+    caret-color: #8d4bd8;
+  }
+
+  .editable:focus {
+    box-shadow: inset 0 0 0 2px rgba(141,75,216,.16);
+  }
+
+  .editable:empty::before {
+    content: "Nhấp vào đây để viết nội dung...";
+    color: #c8c8c8;
+    pointer-events: none;
+  }
+
+  .editable::-webkit-scrollbar { width: 7px; }
+  .editable::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .editable { padding: 12px; }
+    .toolbar button { font-size: 12px; padding: 8px 12px; }
+  }
+
+  @media print {
+    body { padding: 0; background: white; }
+    .toolbar, .hint { display: none; }
+    .page { width: 100%; }
+    .canvas { box-shadow: none; }
+    .editable { box-shadow: none !important; }
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="toolbar">
+    <button onclick="saveContent()">💾 Lưu</button>
+    <button onclick="loadContent()">↻ Khôi phục</button>
+    <button onclick="clearContent()">🗑 Xóa nội dung</button>
+    <button onclick="window.print()">🖨 In / PDF</button>
   </div>
 
+  <p class="hint">
+    Bấm vào ô trắng trong mẫu rồi nhập nội dung theo ý bạn. Nội dung sẽ được lưu trên trình duyệt.
+  </p>
+
+  <div class="canvas">
+    <div id="editor"
+         class="editable"
+         contenteditable="true"
+         spellcheck="true"
+         aria-label="Ô nhập nội dung"></div>
+  </div>
+</div>
+
+<script>
+  const editor = document.getElementById("editor");
+  const STORAGE_KEY = "website_mau_noi_dung";
+
+  function saveContent() {
+    localStorage.setItem(STORAGE_KEY, editor.innerHTML);
+    alert("Đã lưu nội dung.");
+  }
+
+  function loadContent() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved !== null) {
+      editor.innerHTML = saved;
+      alert("Đã khôi phục nội dung.");
+    } else {
+      alert("Chưa có nội dung được lưu.");
+    }
+  }
+
+  function clearContent() {
+    if (confirm("Bạn có chắc muốn xóa nội dung trong ô trắng không?")) {
+      editor.innerHTML = "";
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+
+  // Tự động khôi phục nội dung lần trước.
+  window.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) editor.innerHTML = saved;
+  });
+
+  // Lưu nhanh bằng Ctrl + S.
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      saveContent();
+    }
+  });
+</script>
 </body>
 </html>
