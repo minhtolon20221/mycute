@@ -3,121 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Bouquet For Thảo My</title>
+    <title>A Bouquet For Thảo My - Ultimate Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Courier+Prime&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html {
             width: 100%; height: 100%; overflow: hidden;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background: radial-gradient(circle, #fff0f3 0%, #ffd1dc 100%);
             font-family: 'Courier Prime', monospace;
+        }
+
+        /* HỆ THỐNG TRANG TRÍ NỀN (Cánh hoa & Sticker bay) */
+        .petal, .bg-sticker {
+            position: absolute; pointer-events: none; z-index: 1;
+        }
+        .petal {
+            background: #ff85a1; border-radius: 15px 0 15px 0; opacity: 0.5;
+        }
+        .bg-sticker {
+            font-size: 24px; opacity: 0.3; animation: floatBg 6s ease-in-out infinite alternate;
+        }
+        @keyframes floatBg {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(15deg); }
         }
 
         #experience-container {
             position: relative; width: 100vw; height: 100vh; z-index: 10;
         }
 
-        /* PHONG THƯ */
+        /* PHONG THƯ TRANG TRÍ SIÊU LUNG LINH */
         #envelope-wrapper {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center; z-index: 50; cursor: pointer;
+            filter: drop-shadow(0 10px 25px rgba(255, 105, 180, 0.4));
         }
-        .env-text { font-size: 22px; color: #5d4037; margin: 15px 0; font-weight: bold; }
-        .hint { font-size: 12px; letter-spacing: 2px; opacity: 0.6; margin-top: 15px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .env-text { font-size: 24px; color: #880e4f; margin: 15px 0; font-weight: bold; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        .hint { font-size: 13px; letter-spacing: 3px; color: #ad1457; margin-top: 15px; animation: pulse 1.2s infinite; font-weight: bold; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
 
         .envelope-body {
-            width: 300px; height: 200px; background: #f4c0b9;
-            position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-radius: 4px;
+            width: 320px; height: 210px; background: #ffb3c6;
+            position: relative; border-radius: 8px; border: 2px solid #ff85a1;
         }
         .envelope-flap {
             position: absolute; top: 0; left: 0;
-            border-left: 150px solid transparent; border-right: 150px solid transparent;
-            border-top: 110px solid #e2b6b0; transform-origin: top; z-index: 4;
+            border-left: 160px solid transparent; border-right: 160px solid transparent;
+            border-top: 120px solid #ff708d; transform-origin: top; z-index: 4;
         }
         .envelope-bottom {
             position: absolute; bottom: 0; left: 0;
-            border-left: 150px solid transparent; border-right: 150px solid transparent;
-            border-bottom: 110px solid #eeb4ac; z-index: 3;
+            border-left: 160px solid transparent; border-right: 160px solid transparent;
+            border-bottom: 110px solid #ff8fab; z-index: 3;
+        }
+        .seal-sticker {
+            position: absolute; top: 85px; left: 50%; transform: translateX(-50%);
+            width: 40px; height: 40px; background: #d81b60; border-radius: 50%;
+            z-index: 5; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* VẬT THỂ BAY RA */
+        /* VẬT THỂ KÉO THẢ */
         #scattered-items { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         
         .drag-item {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
             opacity: 0; cursor: grab; pointer-events: auto;
-            filter: drop-shadow(5px 15px 15px rgba(0,0,0,0.2)); 
+            filter: drop-shadow(5px 15px 25px rgba(0,0,0,0.2)); 
         }
-        .drag-item:active { cursor: grabbing; filter: drop-shadow(10px 25px 20px rgba(0,0,0,0.3)); }
+        .drag-item:active { cursor: grabbing; filter: drop-shadow(10px 25px 35px rgba(0,0,0,0.3)); }
 
+        /* Tấm thiệp trang trí */
         .letter-card {
-            background: #fffdf5; width: 300px; padding: 30px; border-radius: 8px;
-            font-family: 'Caveat', cursive; font-size: 26px; color: #4a4a4a; line-height: 1.4;
+            background: #fff0f3; width: 320px; padding: 35px; border-radius: 12px;
+            font-family: 'Caveat', cursive; font-size: 27px; color: #6d071a; line-height: 1.4;
+            border: 2px dashed #ffb3c6; box-shadow: inset 0 0 15px rgba(255, 182, 193, 0.3);
         }
 
-        /* ẢNH POLAROID CÓ LỚP CÀO (SCRATCH) */
+        /* KHUNG ẢNH POLAROID CÓ CÀO ĐẶC BIỆT */
         .polaroid-scratch {
-            background: white; padding: 12px 12px 45px 12px; border-radius: 4px;
-            width: 220px; position: relative;
+            background: white; padding: 14px 14px 50px 14px; border-radius: 6px;
+            width: 240px; position: relative; border: 1px solid #ffd1dc;
         }
         .scratch-image-container {
-            position: relative; width: 196px; height: 240px;
+            position: relative; width: 212px; height: 260px; overflow: hidden; border-radius: 4px;
         }
         .scratch-image-container img {
-            width: 100%; height: 100%; object-fit: cover; border-radius: 2px;
-            pointer-events: none; /* Tránh cản trở sự kiện chuột */
+            width: 100%; height: 100%; object-fit: pointer;
         }
-        /* Lớp bạc phủ lên trên */
         canvas.scratch-layer {
             position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; z-index: 2;
-            cursor: crosshair; /* Trỏ chuột hình chữ thập khi cào */
+            width: 100%; height: 100%; z-index: 5;
+            cursor: crosshair; touch-action: none; /* Ngăn cuộn trang khi cào trên mobile/pad */
         }
-        
         .polaroid-text {
-            position: absolute; bottom: 12px; left: 0; width: 100%;
-            text-align: center; font-family: 'Caveat', cursive; font-size: 20px; color: #555;
-            pointer-events: none;
+            position: absolute; bottom: 14px; left: 0; width: 100%;
+            text-align: center; font-family: 'Caveat', cursive; font-size: 22px; color: #ad1457;
         }
+
+        /* WIDGET KÍNH MỜ TRANG TRÍ */
+        .widget {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            padding: 14px; border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.15);
+        }
+        .widget-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #880e4f; }
 
     </style>
 </head>
 <body>
 
+    <!-- CÁNH HOA & STICKER RƠI NỀN -->
+    <div id="decor-container"></div>
+
     <div id="experience-container">
         
+        <!-- PHONG THƯ -->
         <div id="envelope-wrapper">
-            <div class="env-text">FROM: UIS Media</div>
+            <div class="env-text">💌 Dành cho Chủ tịch CLB siêu cấp xịn xò</div>
             <div class="envelope-body">
                 <div class="envelope-flap" id="env-flap"></div>
                 <div class="envelope-bottom"></div>
+                <div class="seal-sticker">💖</div>
             </div>
-            <div class="env-text">TO: Thảo My</div>
-            <div class="hint">CLICK ĐỂ MỞ THƯ</div>
+            <div class="env-text">Thảo My ơi, mở ra xem nè!</div>
+            <div class="hint">[ CLICK VÀO ĐÂY ĐỂ KHÁM PHÁ ]</div>
         </div>
 
+        <!-- CÁC VẬT THỂ KÉO THẢ SAU KHI MỞ -->
         <div id="scattered-items">
             
+            <!-- Thiệp chúc mừng -->
             <div class="drag-item letter-card" id="item-letter">
-                Gửi Chủ nhiệm xịn xò,<br><br>
-                Hãy cào bức ảnh bên cạnh để xem kỷ niệm nhé. Đừng quên phương châm:<br><br>
-                <strong>"Sống hết mình cho ngày hôm nay!"</strong> 📸✨
+                Gửi Thảo My, cô chủ nhiệm đầy nhiệt huyết của UIS Media! ✨<br><br>
+                Chúc cậu luôn tỏa sáng rực rỡ, code mượt tay và tràn ngập niềm vui. Hãy tận hưởng từng khoảnh khắc và luôn nhớ rằng:<br><br>
+                <strong>"Sống hết mình cho ngày hôm nay!"</strong> 🌸💖
             </div>
 
-            <!-- ẢNH POLAROID CÀO (SCRATCH) -->
+            <!-- Ảnh Polaroid Cào Được -->
             <div class="drag-item polaroid-scratch" id="item-scratch">
                 <div class="scratch-image-container">
-                    <!-- Ảnh bị giấu bên dưới -->
                     <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=400&auto=format&fit=crop" alt="Memory">
-                    <!-- Lớp Canvas để cào -->
                     <canvas id="scratch-pad" class="scratch-layer"></canvas>
                 </div>
-                <div class="polaroid-text">Nắm viền trắng để kéo ↔️</div>
+                <div class="polaroid-text">✨ Dùng chuột cào lớp bạc này nhé!</div>
             </div>
 
+            <!-- Widget Nhạc -->
+            <div class="drag-item widget" id="item-music">
+                <div class="widget-title">🎵 Giai điệu hôm nay dành riêng cho cậu</div>
+                <iframe width="290" height="160" src="https://www.youtube.com/embed/5F2_N_VpL6I?si=j2N1_c4MhH1x8pPz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 10px;"></iframe>
+            </div>
+
+            <!-- Widget Map -->
+            <div class="drag-item widget" id="item-map">
+                <div class="widget-title">📍 Tọa độ thanh xuân (Hạ Hòa)</div>
+                <iframe src="https://www.google.com/maps?q=Trường+THPT+Hạ+Hòa&output=embed" width="270" height="180" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
         </div>
     </div>
 
@@ -128,75 +176,101 @@
         gsap.registerPlugin(Draggable);
         let highestZIndex = 100;
 
-        // --- HỆ THỐNG CÀO ẢNH (CANVAS SCRATCH) ---
+        // --- 1. TẠO HIỆU ỨNG TRANG TRÍ NỀN (Cánh hoa & Sticker bay) ---
+        function initDecor() {
+            const container = document.getElementById('decor-container');
+            const symbols = ['🌸', '✨', '💖', '🎀', '⭐', '🌷'];
+
+            // Tạo cánh hoa rơi
+            for(let i = 0; i < 25; i++) {
+                let p = document.createElement('div');
+                p.classList.add('petal');
+                p.style.width = Math.random() * 18 + 10 + 'px';
+                p.style.height = Math.random() * 18 + 10 + 'px';
+                p.style.left = Math.random() * 100 + 'vw';
+                container.appendChild(p);
+
+                gsap.to(p, {
+                    y: "110vh", x: "+=" + (Math.random() * 120 - 60),
+                    rotation: Math.random() * 360,
+                    duration: Math.random() * 6 + 4,
+                    repeat: -1, ease: "none", delay: Math.random() * -10
+                });
+            }
+
+            // Tạo sticker bay lơ lửng quanh nền
+            for(let i = 0; i < 15; i++) {
+                let s = document.createElement('div');
+                s.classList.add('bg-sticker');
+                s.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                s.style.left = Math.random() * 90 + 5 + 'vw';
+                s.style.top = Math.random() * 90 + 5 + 'vh';
+                s.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(s);
+            }
+        }
+        initDecor();
+
+
+        // --- 2. HỆ THỐNG CÀO ẢNH SIÊU MƯỢT (FIX TRIỆT ĐỂ LỖI KHÔNG CÀO ĐƯỢC) ---
         const canvas = document.getElementById('scratch-pad');
         const ctx = canvas.getContext('2d');
         
-        // Cài đặt kích thước thực của canvas khớp với CSS
-        canvas.width = 196;
-        canvas.height = 240;
+        canvas.width = 212;
+        canvas.height = 260;
 
-        // Phủ màu xám bạc lên toàn bộ canvas
+        // Vẽ lớp phủ màu bạc lấp lánh lên ảnh
         ctx.fillStyle = '#b0bec5';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Ghi chữ "Scratch me" lên lớp phủ
-        ctx.font = '24px Caveat';
-        ctx.fillStyle = '#455a64';
+        ctx.font = 'bold 22px Caveat';
+        ctx.fillStyle = '#37474f';
         ctx.textAlign = 'center';
-        ctx.fillText('Scratch me!', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('✨ Cào nhẹ để mở quà ✨', canvas.width / 2, canvas.height / 2);
 
-        let isDrawing = false;
+        let isScratching = false;
 
-        // Hàm xử lý việc xóa lớp phủ (như cục tẩy)
-        function scratch(e) {
-            if (!isDrawing) return;
-            
-            // Lấy tọa độ chuột/chạm chính xác trên canvas
+        function scratchLine(e) {
+            if (!isScratching) return;
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             const x = clientX - rect.left;
             const y = clientY - rect.top;
 
-            // 'destination-out' làm cho nét vẽ tiếp theo sẽ xóa đi màu cũ thay vì đè lên
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
-            ctx.arc(x, y, 18, 0, Math.PI * 2); // Bán kính nét cào là 18px
+            ctx.arc(x, y, 20, 0, Math.PI * 2); // Kích thước nét cào
             ctx.fill();
         }
 
-        // Bắt sự kiện chuột và cảm ứng trên Canvas
-        // StopPropagation rất quan trọng: Nó ngăn không cho sự kiện click lọt xuống thư viện GSAP Draggable
-        const startScratch = (e) => { isDrawing = true; e.stopPropagation(); };
-        const stopScratch = () => { isDrawing = false; };
-        const doScratch = (e) => { e.stopPropagation(); scratch(e); };
+        // Chặn sự kiện nổi bọt để GSAP không cướp mất chuột khi đang cào
+        canvas.addEventListener('mousedown', (e) => { isScratching = true; e.stopPropagation(); scratchLine(e); });
+        canvas.addEventListener('mousemove', (e) => { e.stopPropagation(); scratchLine(e); });
+        window.addEventListener('mouseup', () => { isScratching = false; });
 
-        canvas.addEventListener('mousedown', startScratch);
-        canvas.addEventListener('mousemove', doScratch);
-        canvas.addEventListener('mouseup', stopScratch);
-        canvas.addEventListener('mouseleave', stopScratch);
-
-        canvas.addEventListener('touchstart', startScratch, {passive: true});
-        canvas.addEventListener('touchmove', doScratch, {passive: true});
-        canvas.addEventListener('touchend', stopScratch);
+        canvas.addEventListener('touchstart', (e) => { isScratching = true; e.stopPropagation(); scratchLine(e); }, {passive: true});
+        canvas.addEventListener('touchmove', (e) => { e.stopPropagation(); scratchLine(e); }, {passive: true});
+        window.addEventListener('touchend', () => { isScratching = false; });
 
 
-        // --- TIMELINE MỞ THƯ & KÉO THẢ ---
+        // --- 3. TIMELINE MỞ THƯ VÀ KÉO THẢ ---
         const envelope = document.getElementById('envelope-wrapper');
         const flap = document.getElementById('env-flap');
         const items = document.querySelectorAll('.drag-item');
 
         const scatterData = [
-            { x: -200, y: -20, rot: -8 },   // Thiệp
-            { x: 220, y: 10, rot: 5 },      // Ảnh cào
+            { x: -280, y: -40, rot: -7 },   // Thiệp
+            { x: 270, y: 30, rot: 8 },      // Ảnh cào
+            { x: -290, y: 200, rot: -12 },  // Nhạc
+            { x: 280, y: -180, rot: 10 }    // Map
         ];
 
         envelope.addEventListener('click', () => {
             const tl = gsap.timeline();
 
             tl.to(flap, { rotationX: 180, duration: 0.5, ease: "power2.inOut" })
-              .to(envelope, { y: "+=50", opacity: 0, duration: 0.6, ease: "power2.in", onComplete: () => envelope.style.display = 'none' }, "+=0.2");
+              .to(envelope, { y: "+=60", opacity: 0, duration: 0.6, ease: "power2.in", onComplete: () => envelope.style.display = 'none' }, "+=0.2");
 
             items.forEach((item, index) => {
                 let data = scatterData[index];
@@ -208,15 +282,15 @@
                 }, "-=0.4"); 
             });
 
-            // Khởi tạo kéo thả
+            // Khởi tạo kéo thả cho phép mang đi khắp màn hình
             Draggable.create(".drag-item", {
                 type: "x,y",
-                edgeResistance: 0.7,
+                edgeResistance: 0.75,
                 bounds: "#experience-container",
                 onPress: function() {
                     highestZIndex++;
                     this.target.style.zIndex = highestZIndex;
-                    gsap.to(this.target, { scale: 1.02, duration: 0.2 });
+                    gsap.to(this.target, { scale: 1.04, duration: 0.2 });
                 },
                 onRelease: function() {
                     gsap.to(this.target, { scale: 1, duration: 0.2 });
