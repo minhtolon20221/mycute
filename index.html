@@ -3,173 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Bouquet For You</title>
-    <!-- Font chữ viết tay cho thiệp -->
+    <title>A Bouquet For Thảo My</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Courier+Prime&display=swap" rel="stylesheet">
     <style>
-        /* RESET & CẤU TRÚC CHUNG */
+        /* 1. RESET & BACKGROUND */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html {
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background: url('https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+            width: 100%; height: 100%; overflow: hidden;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             font-family: 'Courier Prime', monospace;
+            perspective: 1000px; /* Bật hiệu ứng 3D cho toàn trang */
         }
-        /* Phủ một lớp màu hồng nhẹ lên hình nền cho đúng vibe */
-        body::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(253, 234, 236, 0.85);
+
+        /* Mưa cánh hoa động */
+        .petal {
+            position: absolute;
+            background: #ffb7b2;
+            border-radius: 15px 0 15px 0;
+            opacity: 0.6;
+            pointer-events: none;
             z-index: 1;
         }
 
         #experience-container {
-            position: relative;
-            width: 100vw; height: 100vh;
-            z-index: 10;
+            position: relative; width: 100vw; height: 100vh; z-index: 10;
         }
 
-        /* TẠO HÌNH PHONG THƯ BẰNG PURE CSS */
+        /* 2. PHONG THƯ CÓ NẮP LẬT */
         #envelope-wrapper {
-            position: absolute;
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 50;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            text-align: center; z-index: 50; cursor: pointer;
         }
-        #envelope-wrapper:hover { transform: translate(-50%, -50%) scale(1.05); }
+        .env-text { font-size: 22px; color: #5d4037; margin: 15px 0; font-weight: bold; }
+        .hint { font-size: 12px; letter-spacing: 2px; opacity: 0.6; margin-top: 15px; animation: pulse 1.5s infinite; }
         
-        .env-text { font-size: 20px; color: #5d4037; margin: 15px 0; font-weight: bold; }
-        .hint { font-size: 12px; letter-spacing: 2px; opacity: 0.6; margin-top: 10px; }
-        
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
         .envelope-body {
-            width: 280px; height: 180px;
-            background: #f4d0cb;
+            width: 300px; height: 200px;
+            background: #f4c0b9;
             position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border-radius: 4px;
+            display: flex; justify-content: center; align-items: flex-end;
         }
-        /* Nắp phong thư */
-        .envelope-body::before {
-            content: ''; position: absolute;
-            top: 0; left: 0;
+        
+        /* Nắp thư có thể lật (Flap) */
+        .envelope-flap {
+            position: absolute; top: 0; left: 0;
             width: 0; height: 0;
-            border-left: 140px solid transparent;
-            border-right: 140px solid transparent;
-            border-top: 100px solid #e2b6b0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e2b6b0;
+            transform-origin: top; /* Tâm xoay ở cạnh trên */
+            z-index: 4;
+        }
+        
+        /* Nếp gấp dưới và hông */
+        .envelope-bottom {
+            position: absolute; bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 110px solid #eeb4ac;
             z-index: 3;
         }
-        /* Nếp gấp dưới */
-        .envelope-body::after {
-            content: ''; position: absolute;
-            bottom: 0; left: 0;
-            width: 0; height: 0;
-            border-left: 140px solid #f4c0b9;
-            border-right: 140px solid #f4c0b9;
-            border-bottom: 90px solid #eeb4ac;
-            z-index: 2;
-        }
 
-        /* STYLE CHO CÁC VẬT THỂ (Ẩn lúc đầu) */
-        #scattered-items {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-        }
+        /* 3. CÁC VẬT THỂ BAY RA */
+        #scattered-items { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
         .drag-item {
-            position: absolute;
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
-            box-shadow: 2px 10px 25px rgba(0,0,0,0.15);
-            cursor: grab;
-            pointer-events: auto;
+            opacity: 0; cursor: grab; pointer-events: auto;
+            /* Bóng đổ xịn xò tạo cảm giác lơ lửng */
+            filter: drop-shadow(5px 15px 15px rgba(0,0,0,0.2)); 
         }
-        .drag-item:active { cursor: grabbing; box-shadow: 5px 15px 35px rgba(0,0,0,0.25); }
+        .drag-item:active { cursor: grabbing; filter: drop-shadow(10px 25px 20px rgba(0,0,0,0.3)); }
 
-        /* Style ảnh Polaroid */
-        .polaroid {
-            background: white;
-            padding: 12px 12px 45px 12px;
-            border-radius: 3px;
+        /* Tấm thiệp */
+        .letter-card {
+            background: #fffdf5; width: 300px; padding: 30px; border-radius: 8px;
+            font-family: 'Caveat', cursive; font-size: 26px; color: #4a4a4a; line-height: 1.4;
         }
-        .polaroid img { width: 180px; height: 220px; object-fit: cover; }
+
+        /* Ảnh Polaroid lật 3D */
+        .polaroid-container {
+            width: 200px; height: 260px;
+            perspective: 1000px;
+        }
+        .polaroid-inner {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .polaroid-container.is-flipped .polaroid-inner { transform: rotateY(180deg); }
+        
+        .polaroid-front, .polaroid-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            background: white; padding: 12px 12px 45px 12px; border-radius: 4px;
+        }
+        .polaroid-front img { width: 100%; height: 100%; object-fit: cover; }
         .polaroid-text {
             position: absolute; bottom: 12px; left: 0; width: 100%;
-            text-align: center; font-family: 'Caveat', cursive; font-size: 22px; color: #333;
+            text-align: center; font-family: 'Caveat', cursive; font-size: 24px;
+        }
+        
+        .polaroid-back {
+            transform: rotateY(180deg);
+            background: #faf8f5;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Caveat', cursive; font-size: 28px; color: #d32f2f;
+            text-align: center; padding: 20px;
         }
 
-        /* Style Tấm thiệp */
-        .letter-card {
-            background: #fffdf5;
-            width: 260px; height: 320px;
-            padding: 25px;
-            border-radius: 8px;
-            font-family: 'Caveat', cursive;
-            font-size: 24px; color: #4a4a4a;
-            line-height: 1.4;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.02), 2px 10px 25px rgba(0,0,0,0.15);
+        /* Widget Glassmorphism (Kính mờ) */
+        .widget {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 12px; border-radius: 16px;
         }
-
-        /* Khối Widget (Map / Iframe) */
-        .widget { background: white; padding: 10px; border-radius: 12px; }
-        .widget-title { font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #777;}
+        .widget-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #333; }
 
     </style>
 </head>
 <body>
 
+    <!-- Vùng chứa cánh hoa động -->
+    <div id="petals-container"></div>
+
     <div id="experience-container">
         
-        <!-- PHONG THƯ Ở GIỮA MÀN HÌNH -->
+        <!-- PHONG THƯ -->
         <div id="envelope-wrapper">
-            <div class="env-text">FROM Hội Xí Xọn</div>
-            <div class="envelope-body"></div>
-            <div class="env-text">FOR Thảo My</div>
-            <div class="hint">CLICK THE ENVELOPE</div>
+            <div class="env-text">FROM: Gia đình UIS Media</div>
+            <div class="envelope-body">
+                <div class="envelope-flap" id="env-flap"></div>
+                <div class="envelope-bottom"></div>
+            </div>
+            <div class="env-text">TO: Thảo My</div>
+            <div class="hint">CLICK ĐỂ MỞ THƯ</div>
         </div>
 
-        <!-- CÁC ĐỒ VẬT SẼ VĂNG RA SAU KHI CLICK -->
+        <!-- VẬT THỂ -->
         <div id="scattered-items">
             
-            <!-- Tấm thiệp gửi gắm thông điệp -->
+            <!-- Thiệp -->
             <div class="drag-item letter-card" id="item-letter">
-                Gửi cô Chủ nhiệm CLB Truyền thông,<br><br>
-                Mong cậu luôn giữ được ngọn lửa đam mê với những dòng code và sự sáng tạo không giới hạn.<br><br>
-                Hãy nhớ nhé: <strong>"Sống hết mình cho ngày hôm nay!"</strong> 🌸
+                Gửi Chủ nhiệm xịn xò của chúng ta,<br><br>
+                Chúc cậu luôn giữ lửa đam mê, dẫn dắt câu lạc bộ bay cao hơn nữa. Và đừng bao giờ quên phương châm quen thuộc nhé:<br><br>
+                <strong>"Sống hết mình cho ngày hôm nay!"</strong> 📸✨
             </div>
 
-            <!-- Ảnh Polaroid 1: Mèo -->
-            <div class="drag-item polaroid" id="item-cat">
-                <!-- Dùng link ảnh Unsplash ngẫu nhiên về mèo -->
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=400&auto=format&fit=crop" alt="Cat">
-                <div class="polaroid-text">Meow meow~</div>
+            <!-- Polaroid 1: Mèo lật được -->
+            <div class="drag-item polaroid-container" id="item-cat">
+                <div class="polaroid-inner">
+                    <div class="polaroid-front">
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=400&auto=format&fit=crop" alt="Cat">
+                        <div class="polaroid-text">Chạm để lật 🐾</div>
+                    </div>
+                    <div class="polaroid-back">
+                        Cuộc sống có hơi xí xọn nhưng luôn đáng yêu!
+                    </div>
+                </div>
             </div>
 
-            <!-- Ảnh Polaroid 2: Du lịch -->
-            <div class="drag-item polaroid" id="item-travel">
-                <!-- Dùng link ảnh Unsplash về du lịch -->
-                <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=400&auto=format&fit=crop" alt="Travel">
-                <div class="polaroid-text">Let's travel the world!</div>
+            <!-- Polaroid 2: Len/Móc lật được -->
+            <div class="drag-item polaroid-container" id="item-crochet">
+                <div class="polaroid-inner">
+                    <div class="polaroid-front">
+                        <img src="https://images.unsplash.com/photo-1606138676571-067451000b92?q=80&w=400&auto=format&fit=crop" alt="Crochet">
+                        <div class="polaroid-text">Chạm để lật 🧶</div>
+                    </div>
+                    <div class="polaroid-back">
+                        Tỉ mẩn từng mũi đan, dệt nên những ước mơ nhỏ.
+                    </div>
+                </div>
             </div>
 
-            <!-- YouTube Iframe: Tượng trưng cho nhạc Soobin Hoàng Sơn -->
+            <!-- Widget Nhạc Soobin -->
             <div class="drag-item widget" id="item-music">
-                <div class="widget-title">🎵 Playlist Vibes</div>
-                <iframe width="280" height="150" src="https://www.youtube.com/embed/5F2_N_VpL6I?si=j2N1_c4MhH1x8pPz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="widget-title">🎧 Đang phát bài hát yêu thích...</div>
+                <iframe width="300" height="170" src="https://www.youtube.com/embed/4a59d_hKqIE?si=G1H3G_G6_X-X_X_X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 8px;"></iframe>
             </div>
 
-            <!-- Google Maps -->
+            <!-- Widget Map Hạ Hòa -->
             <div class="drag-item widget" id="item-map">
-                <div class="widget-title">📍 Memory Map</div>
-                <iframe src="https://www.google.com/maps?q=Trường+THPT+Hạ+Hòa&output=embed" width="280" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="widget-title">📍 Tọa độ thanh xuân</div>
+                <iframe src="https://www.google.com/maps?q=Trường+THPT+Hạ+Hòa&output=embed" width="280" height="200" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe>
             </div>
             
         </div>
     </div>
 
-    <!-- THƯ VIỆN GSAP ANIMATION -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
     
@@ -177,59 +208,99 @@
         gsap.registerPlugin(Draggable);
         let highestZIndex = 100;
 
+        // 1. TẠO HIỆU ỨNG MƯA CÁNH HOA BẰNG JS
+        function createPetals() {
+            const container = document.getElementById('petals-container');
+            for(let i = 0; i < 20; i++) {
+                let petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.style.width = Math.random() * 15 + 10 + 'px';
+                petal.style.height = Math.random() * 15 + 10 + 'px';
+                petal.style.left = Math.random() * 100 + 'vw';
+                container.appendChild(petal);
+
+                // Animation rơi liên tục
+                gsap.to(petal, {
+                    y: "110vh",
+                    x: "+=" + (Math.random() * 100 - 50),
+                    rotation: Math.random() * 360,
+                    duration: Math.random() * 5 + 5,
+                    repeat: -1,
+                    ease: "none",
+                    delay: Math.random() * -10 // Rơi ngẫu nhiên ngay từ đầu
+                });
+            }
+        }
+        createPetals();
+
+        // 2. TIMELINE MỞ THƯ
         const envelope = document.getElementById('envelope-wrapper');
+        const flap = document.getElementById('env-flap');
         const items = document.querySelectorAll('.drag-item');
 
-        // Setup tọa độ và góc xoay cố định cho từng item để lúc văng ra nhìn đẹp nhất, không bị đè lên nhau
         const scatterData = [
-            { x: -250, y: -80, rot: -10 },   // Thiệp (bên trái)
-            { x: 280, y: -150, rot: 15 },    // Ảnh Mèo (góc trên phải)
-            { x: -300, y: 200, rot: -12 },   // Ảnh Du lịch (góc dưới trái)
-            { x: 0, y: -220, rot: 5 },       // Nhạc (ở trên cùng giữa)
-            { x: 300, y: 150, rot: 8 }       // Map (góc dưới phải)
+            { x: -300, y: -50, rot: -8 },   // Thiệp
+            { x: 300, y: -160, rot: 12 },   // Mèo
+            { x: -320, y: 220, rot: -15 },  // Len
+            { x: 0, y: -240, rot: 3 },      // Nhạc
+            { x: 320, y: 180, rot: 6 }      // Map
         ];
 
-        // Xử lý sự kiện Click phong thư
         envelope.addEventListener('click', () => {
-            
-            // 1. Zoom out và làm mờ phong thư
-            gsap.to(envelope, {
-                scale: 0, opacity: 0, duration: 0.6, ease: "back.in(1.5)",
-                onComplete: () => envelope.style.display = 'none'
-            });
+            const tl = gsap.timeline();
 
-            // 2. Bắn các item ra xung quanh
+            // Lật nắp thư
+            tl.to(flap, {
+                rotationX: 180,
+                duration: 0.5,
+                ease: "power2.inOut"
+            })
+            // Mờ thân thư và đẩy nhẹ xuống dưới
+            .to(envelope, {
+                y: "+=50",
+                opacity: 0,
+                duration: 0.6,
+                ease: "power2.in",
+                onComplete: () => envelope.style.display = 'none'
+            }, "+=0.2");
+
+            // Bắn đồ vật ra ngoài
             items.forEach((item, index) => {
                 let data = scatterData[index];
-                
-                // Set z-index mặc định ban đầu
                 item.style.zIndex = highestZIndex + index;
-
-                gsap.to(item, {
-                    x: data.x,
-                    y: data.y,
-                    rotation: data.rot,
-                    scale: 1,
-                    opacity: 1,
+                
+                tl.to(item, {
+                    x: data.x, y: data.y, rotation: data.rot,
+                    scale: 1, opacity: 1,
                     duration: 1.2,
-                    delay: 0.3 + (index * 0.1), // Delay nối tiếp nhau
-                    ease: "elastic.out(1, 0.75)" // Hiệu ứng nảy nhẹ nhàng
-                });
+                    ease: "back.out(1.5)"
+                }, "-=0.4"); // Chạy nối tiếp chồng lên nhau một chút
             });
 
-            // 3. Khởi tạo tính năng kéo thả
+            // Bật kéo thả
             Draggable.create(".drag-item", {
                 type: "x,y",
-                edgeResistance: 0.8,
-                bounds: "#experience-container", // Khóa trong màn hình
+                edgeResistance: 0.7,
+                bounds: "#experience-container",
                 onPress: function() {
-                    // Khi click vào vật nào, đẩy nó lên layer trên cùng
                     highestZIndex++;
                     this.target.style.zIndex = highestZIndex;
                     gsap.to(this.target, { scale: 1.05, duration: 0.2 });
                 },
                 onRelease: function() {
                     gsap.to(this.target, { scale: 1, duration: 0.2 });
+                }
+            });
+        }, { once: true }); // Đảm bảo chỉ click 1 lần
+
+        // 3. LOGIC LẬT ẢNH POLAROID 
+        document.querySelectorAll('.polaroid-container').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Kiểm tra xem người dùng đang kéo hay đang click (Tránh vừa kéo vừa lật)
+                if (!Draggable.get(this) || !Draggable.get(this).isDragging) {
+                    this.classList.toggle('is-flipped');
+                    highestZIndex++;
+                    this.style.zIndex = highestZIndex;
                 }
             });
         });
